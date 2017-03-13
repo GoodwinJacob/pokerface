@@ -1,18 +1,25 @@
 package poker;
 
-public class card {
-	private short suit;
-	private short rank;
-	private static String[] suits = { "hearts", "diamonds", "spades", "clubs"};
-	private static String[] ranks = { "Ace", "2", "3", "4", "5", "6", "7", "8",
-			"9", "10", "Jack", "Queen", "King"};
+public class Card {
+	private String suit;
+	private String rank;
 
 	
+	Card(String suit, String rank){
+		this.suit = suit;
+		this.rank = rank;
+	}
 	
-	public short getSuit(){
+	public String getSuit(){
 		return suit;
 	}
-	public short getRank(){
+	public String getRank(){
 		return rank;
+	}
+	/*
+	 * Used for testing. Remove later
+	 */
+	public String printCard(){
+		return suit + " " + rank;
 	}
 }
