@@ -1,0 +1,10 @@
+CREATE  TABLE IF NOT EXISTS `players`.`player` (
+  `idplayer` INT NOT NULL AUTO_INCREMENT ,
+  `playername` VARCHAR(45) NOT NULL ,
+  `password`  NOT NULL ,
+  `gold` INT NOT NULL DEFAULT 500 ,
+  `handsplayed` INT NULL ,
+  `handswon` INT NULL ,
+  `datecreated` DATETIME NOT NULL ,
+  PRIMARY KEY (`idplayer`) ,
+  UNIQUE INDEX `playername_UNIQUE` (`playername` ASC) )
