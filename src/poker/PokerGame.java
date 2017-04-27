@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.sql.*;
+import org.json.JSONObject;
 
 public class PokerGame {
     private DeckInterface deck;
@@ -16,6 +17,10 @@ public class PokerGame {
     private List<Card> tableCards;
     private int pot;
     private int buyin;
+    private int turn; //0 for player 1 turn
+    private int amountToCall;
+    private boolean needThirdGameCycle = false;
+    private int exec;
 
     public List<Card> getTableCards() {
         return tableCards;
@@ -270,6 +275,200 @@ public class PokerGame {
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             e.printStackTrace();
+        }
+    }
+
+    public boolean gameCycle(String username, String action, int amount, boolean thridCycle){
+        boolean result;
+        int indexInPlayerList = findIndex(username);
+
+        if(action.equals("fold")){
+            result = false;
+            List<PlayerInterface> winner = new ArrayList();
+            if(indexInPlayerList == 0){
+                winner.add(players.get(1));
+            }
+            else if(indexInPlayerList == 1){
+                winner.add(players.get(0));
+            }
+            winnerGold(winner, pot);
+            return result;
+        }
+        else if(action.equals("call")){
+            result = true;
+            //First time of this game cycle
+            if(exec == 0){
+                amountToCall = 0;
+            }
+            //Second time of game cycle and need to call
+            if((exec == 1) && amountToCall > 0){
+                //Find the amount of gold a player has
+                int amountInPlayer = players.get(indexInPlayerList).getGold();
+                //The amount makes the player all in
+                if(amount >  amountInPlayer){
+                    pot += amountInPlayer;
+                    //The player is all in
+                    players.get(indexInPlayerList).setGold(0);
+                    //Reduce gold in DB here
+                }
+                //The player is not all in.
+                else{
+                    pot += amount;
+                    //Subtract the amount needed to call
+                    players.get(indexInPlayerList).setGold(amountInPlayer - amount);
+                    //Reduce gold in DB here
+                }
+                amountToCall = 0;
+            }
+            //Second time of game cycle. This is the 2nd player checking
+            else if((exec == 1) && (amountToCall == 0)){
+                amountToCall = 0;
+            }
+            //Third time in game cycle. Needed if the second person bets
+            else if((exec == 2) && (amountToCall > 0)){
+                //Find the amount of gold a player has
+                int amountInPlayer = players.get(indexInPlayerList).getGold();
+                //The amount makes the player all in
+                if(amount >  amountInPlayer){
+                    pot += amountInPlayer;
+                    //The player is all in
+                    players.get(indexInPlayerList).setGold(0);
+                    //Reduce gold in DB here
+                }
+                //The player is not all in.
+                else{
+                    pot += amount;
+                    //Subtract the amount needed to call
+                    players.get(indexInPlayerList).setGold(amountInPlayer - amount);
+                    //Reduce gold in DB here
+                }
+            }
+        }
+        else if(action.equals("bet")){
+            result = true;
+            //If the first person bets update pot and amount to call
+            if(exec == 0){
+                //Find the amount of gold a player has
+                int amountInPlayer = players.get(indexInPlayerList).getGold();
+                //The amount makes the player all in
+                if(amount >  amountInPlayer){
+                    pot += amountInPlayer;
+                    //The player is all in
+                    players.get(indexInPlayerList).setGold(0);
+                    //Reduce gold in DB here
+                    amountToCall = amountInPlayer;
+                }
+                //The player is not all in.
+                else{
+                    pot += amount;
+                    //Subtract the amount needed to call
+                    players.get(indexInPlayerList).setGold(amountInPlayer - amount);
+                    //Reduce gold in DB here
+                    amountToCall = amount;
+                }
+            }
+            //Second person bets
+            else if(exec == 1){
+                //Find the amount of gold a player has
+                int amountInPlayer = players.get(indexInPlayerList).getGold();
+                //The second person bet. We need to call gamecyle a third time
+                needThirdGameCycle = true;
+                //The amount makes the player all in
+                if(amount >  amountInPlayer){
+                    pot += amountInPlayer;
+                    //The player is all in
+                    players.get(indexInPlayerList).setGold(0);
+                    //Reduce gold in DB here
+                    amountToCall = amountInPlayer;
+                }
+                //The player is not all in. Add amount to call incase the first
+                //person bet
+                else{
+                    pot += (amount + amountToCall);
+                    //Subtract the amount needed to call
+                    players.get(indexInPlayerList).setGold(amountInPlayer - amount);
+                    //Reduce gold in DB here
+                    amountToCall = amount;
+                }
+            }
+            //Happens if the second person bets and the person tries to raise.
+            //Forces a call
+            else if(exec ==2){
+                //Find the amount of gold a player has
+                int amountInPlayer = players.get(indexInPlayerList).getGold();
+                //The amount makes the player all in
+                if(amountToCall >  amountInPlayer){
+                    pot += amountInPlayer;
+                    //The player is all in
+                    players.get(indexInPlayerList).setGold(0);
+                    //Reduce gold in DB here
+                    amountToCall = 0;
+                }
+                //The player is not all in. Add amount to call incase the first
+                //person bet
+                else{
+                    pot += amountToCall;
+                    //Subtract the amount needed to call
+                    players.get(indexInPlayerList).setGold(amountInPlayer - amountToCall);
+                    //Reduce gold in DB here
+                    amountToCall = 0;
+                }
+                needThirdGameCycle = false;
+            }
+        }
+        else{
+            result = true;
+        }
+        exec += 1;
+        if(turn == 0){ turn = 1; }
+        else if(turn == 1) { turn = 0; }
+
+
+        return result;
+    }
+    private int findIndex(String username){
+        int result;
+        if(players.get(0).getUsername().equals(username)){
+            result = 0;
+        }
+        else if(players.get(1).getUsername().equals(username)){
+            result = 1;
+        }
+        //Should never happen
+        else{
+            result = -1;
+        }
+        return result;
+    }
+
+    public boolean needThirdGameCycle(){
+        return needThirdGameCycle;
+    }
+
+    public String returnGameState(){
+        JSONObject updatedState = new JSONObject();
+        updatedState.put("pot", this.pot);
+        updatedState.put("amountToCall", this.amountToCall);
+        Integer i = 0;
+        for(Card c : tableCards){
+            String card = c.toString();
+            updatedState.put(i.toString(), card);
+            i++;
+        }
+        //updatedState.put("flop0", )
+        return updatedState.toString();
+    }
+    public boolean myTurn(String username){
+        if((players.get(0).getUsername()).equals(username)
+                && turn == 0){
+            return true;
+        }
+        else if((players.get(1).getUsername()).equals(username)
+                && turn == 1){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

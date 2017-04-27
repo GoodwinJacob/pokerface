@@ -43,6 +43,6 @@ public class Card {
 				+ String.valueOf(suit.ordinal()));
 	}
 
-
-	public String printCard(){return suit.toString() + " " + rank.toString();}
+	@Override
+	public String toString(){return suit.toString() + " " + rank.toString();}
 }
