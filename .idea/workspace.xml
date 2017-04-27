@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72d83e46-b63b-47b7-906b-c51525479ea5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MySQL/lib/junit-4.12.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/EvaluatorTest.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/poker/DatabaseDriver.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pokerface.iml" afterPath="$PROJECT_DIR$/pokerface.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/poker/Database.java" afterPath="$PROJECT_DIR$/src/poker/Database.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/poker/GameRunner.java" afterPath="$PROJECT_DIR$/src/poker/GameRunner.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/poker/PokerGame.java" afterPath="$PROJECT_DIR$/src/poker/PokerGame.java" />
     </list>
@@ -53,8 +47,8 @@
       <file leaf-file-name="GameRunner.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/poker/GameRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="88" column="10" lean-forward="false" selection-start-line="88" selection-start-column="10" selection-end-line="88" selection-end-column="10" />
+            <state relative-caret-position="990">
+              <caret line="66" column="5" lean-forward="false" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -65,8 +59,8 @@
       <file leaf-file-name="PokerGame.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/poker/PokerGame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1733">
-              <caret line="43" column="54" lean-forward="true" selection-start-line="43" selection-start-column="54" selection-end-line="43" selection-end-column="54" />
+            <state relative-caret-position="412">
+              <caret line="270" column="5" lean-forward="false" selection-start-line="270" selection-start-column="5" selection-end-line="270" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3799#3829#0" expanded="true" />
@@ -118,6 +112,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
               <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Lobby.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/poker/Lobby.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="39" lean-forward="false" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -183,16 +187,6 @@
                 <element signature="e#16772#16778#0" expanded="true" />
                 <element signature="e#17242#17248#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Rank.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/poker/Rank.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="1" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="66" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -881,14 +875,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/poker/Lobby.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="39" lean-forward="false" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/poker/Suit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -912,14 +898,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="1" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/poker/HandRank.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -1044,10 +1022,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/poker/HandRank.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/poker/Lobby.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="39" lean-forward="false" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/poker/PokerGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1733">
-          <caret line="43" column="54" lean-forward="true" selection-start-line="43" selection-start-column="54" selection-end-line="43" selection-end-column="54" />
+        <state relative-caret-position="412">
+          <caret line="270" column="5" lean-forward="false" selection-start-line="270" selection-start-column="5" selection-end-line="270" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3799#3829#0" expanded="true" />
@@ -1062,8 +1056,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/poker/GameRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="88" column="10" lean-forward="false" selection-start-line="88" selection-start-column="10" selection-end-line="88" selection-end-column="10" />
+        <state relative-caret-position="990">
+          <caret line="66" column="5" lean-forward="false" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -246,3 +246,26 @@ public class PokerGame {
         return winnerList;
     }
 }
+    public void winnerGold(List<PlayerInterface> winnerList, int g){
+        try {
+            //connection to database
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/java", "root", "root");
+            String sql = "";
+            for (PlayerInterface p : winnerList) {
+                int id = p.getUserId();
+                int userGold = p.getGold();
+                userGold = userGold + g;
+                sql = "UPDATE users SET gold = ? WHERE userid = ?";
+                PreparedStatement prepStatement = conn.prepareStatement(sql);
+                prepStatement.setInt(1, userGold);
+                prepStatement.setInt(2, id);
+                prepStatement.executeUpdate();
+                //increase pot
+            }
+            conn.close();
+        }
+        catch(Exception e){
+            System.err.println("Got an exception! ");
+            e.printStackTrace();
+        }
+    }
