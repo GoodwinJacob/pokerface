@@ -17,10 +17,10 @@ public class Player implements PlayerInterface{
     private String username;
     Boolean inGame = false;
 
-    public player(){
+    public Player(){
 
     }
-    public player(String name, int id, int gold, int handsWon, int handsPlayed){
+    public Player(String name, int id, int gold, int handsWon, int handsPlayed){
         this.username = name;
         this.userId = id;
         this.gold = gold;
