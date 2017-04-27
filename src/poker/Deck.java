@@ -7,10 +7,11 @@ package poker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.List;
 
 public class Deck implements DeckInterface{
         //ArrayList of 52 cards
-        ArrayList<Card> arrayOfCards = new ArrayList<Card>;
+        ArrayList<Card> arrayOfCards = new ArrayList<Card>();
 
         private Random random = new Random();
 
@@ -41,8 +42,10 @@ public class Deck implements DeckInterface{
         public void shuffleDeck(){
             Collections.shuffle(arrayOfCards);
         }
+
+
         public Card pop() {
-            return arrayOfCards.remove(random.nextInt(arrayOfCards.size()))
+            return arrayOfCards.remove(random.nextInt(arrayOfCards.size()));
         }
         /*
          * @brief Used to print the deck. Used for testing.
@@ -52,5 +55,5 @@ public class Deck implements DeckInterface{
                 System.out.println(arrayOfCards.get(i).getSuit() + "  " + arrayOfCards.get(i).getRank() );
             }
         }
-    }
 }
+

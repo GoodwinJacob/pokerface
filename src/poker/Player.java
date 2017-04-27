@@ -17,14 +17,23 @@ public class Player implements PlayerInterface{
     private String username;
     Boolean inGame = false;
 
+    public player(){
 
+    }
+    public player(String name, int id, int gold, int handsWon, int handsPlayed){
+        this.username = name;
+        this.userId = id;
+        this.gold = gold;
+        this.handsWon = handsWon;
+        this.handsPlayed = handsPlayed;
+    }
     //getter for highCard
     public Card getHighCard(){ return highCard; }
     //setter for highCard
     public void setHighCard(Card highCard){ this.highCard=highCard; }
     //getter and setter for handRank
     public HandRank getHandRank(){return handRank;}
-    public void setHandRank(HandRank handRank){this.handRank = handRank}
+    public void setHandRank(HandRank handRank){this.handRank = handRank;}
     //getter for hand
     public Card[] getHand(){ return hand; }
     //setter for hand

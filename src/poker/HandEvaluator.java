@@ -15,12 +15,14 @@ import static poker.HandRank.*;
 
 
 public class HandEvaluator {
-    private HandEvaluator(){
+    private HandEvaluator() {
 
     }
+
     public static Integer getRankingToInt(PlayerInterface p) {
         return p.getHandRank().ordinal();
     }
+
     public static void checkRanking(PlayerInterface player, List<Card> tableCards) {
 
         //get the HIGH_CARD
