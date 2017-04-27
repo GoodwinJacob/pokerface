@@ -175,16 +175,18 @@ public class PokerGame {
         }
         getRankings();
     }
-    public void turn() {
+    //changed to turnRiver, just calling it twice now.
+    public void turnRiver() {
         deck.pop();
         tableCards.add(deck.pop());
         getRankings();
     }
-    public void river(){
+    //does the same thing as turn,
+/*    public void river(){
         deck.pop();
         tableCards.add(deck.pop());
         getRankings();
-    }
+    }*/
     public List<PlayerInterface> winner(){
         getRankings();
         List<PlayerInterface> winnerList = new ArrayList<PlayerInterface>();
@@ -217,8 +219,30 @@ public class PokerGame {
             }
             winnerRank = HandEvaluator.getRankingToInt(winner);
         }
+        try {
+            //connect to db
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/java", "root", "root");
+            String sql = "";
+            //get id and gold amount of winner
+            int id = winner.getUserId();
+            int userGold = winner.getGold();
+            //set gold to push to DB
+            userGold = userGold + getPot();
+            //use prep statement to push new amount of gold to the DB
+            sql = "UPDATE users SET gold = ? WHERE userid = ?";
+            PreparedStatement prepStatement = conn.prepareStatement(sql);
+            prepStatement.setInt(1, userGold);
+            prepStatement.setInt(2, id);
+            prepStatement.executeUpdate();
+            //close connection to db
+            conn.close();
+
+        }
+        catch(Exception e){
+            System.err.println("Got an exception! ");
+            e.printStackTrace();
+        }
 
         return winnerList;
-        //TODO: on declaration of winner, select the winning player and push the pot to his
     }
 }

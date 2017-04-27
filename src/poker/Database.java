@@ -4,14 +4,10 @@ package poker;
  * Created by jacobgoodwin on 4/26/17.
  */
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class Database {
     public static void main(String[] args) {
-        try {
+        /*try {
             //connection to database
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:8889/java", "root", "root"); //create statement Statement myStmt = myConn.createStatement(); //execute sql query
             Statement myStmt = myConn.createStatement();
@@ -21,6 +17,7 @@ public class Database {
             }
         } catch (Exception exc) {
             exc.printStackTrace();
-        }
+        }*/
+
     }
 }
