@@ -8,7 +8,12 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class HandEvaluator {
+    private HandEvaluator(){
 
+    }
+    public static Integer getRankingToInt(PlayerInterface p) {
+        return p.getRankingEnum().ordinal();
+    }
     private Card[] hand = new Card[2];
 
     public Comparator<Card> byRank = (Card left, Card right) -> {

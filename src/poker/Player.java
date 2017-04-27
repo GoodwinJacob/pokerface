@@ -8,6 +8,7 @@ import java.util.List;
 public class Player implements PlayerInterface{
     private Card[] hand = new Card[2];
     private List<Card> rankingList = null;
+    private HandRank handRank = null;
     private Card highCard = null;
     private int userId;
     private int gold;
