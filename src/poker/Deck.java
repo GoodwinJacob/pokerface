@@ -11,20 +11,22 @@ import java.util.Random;
 public class Deck implements DeckInterface{
         //ArrayList of 52 cards
         ArrayList<Card> arrayOfCards = new ArrayList<Card>(52);
-        //static arrays for suits and ranks to initialize the cards for the deck
-        private static String[] suits = { "hearts", "diamonds", "spades", "clubs"};
-        private static String[] ranks = { "Ace", "2", "3", "4", "5", "6", "7", "8",
-                                          "9", "10", "Jack", "Queen", "King"};
+
         private Random random = new Random();
 
         /*
          * @breif Initialize the deck and then shuffle it.
          */
         Deck(){
-            initializeDeck();
-            shuffleDeck();
+            this(new Random());
             //printDeck(); //Uncomment to print deck to console
         }
+        Deck(Random random) {
+            this.random = random;
+            initializeDeck();
+            shuffleDeck();
+        }
+
         /*
          * @brief Used to fill the a deck with cards.
          * Cards are not shuffled.

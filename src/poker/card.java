@@ -2,26 +2,47 @@ package poker;
 
 public class Card {
 	//attributes of the cards
-	private String suit;
-	private String rank;
+	private Suit suit;
+	private Rank rank;
 
 	//simple constructor for class
-	Card(String suit, String rank){
+	Card(Suit suit, Rank rank){
 		this.suit = suit;
 		this.rank = rank;
 	}
-	//returns the int for rank as a string
-	public static String rankString(int newRank){
-		return ranks[newRank];
-	}
+
 
 	//getter for suit
-	public String getSuit(){
+	public Suit getSuit(){
 		return suit;
 	}
 	//getter for rank
-	public String getRank(){
+	public Rank getRank(){
 		return rank;
 	}
-	public String printCard(){return suit + " " + rank;}
+	//returns the int for rank as a string
+	public Integer rankInt(){
+		return rank.ordinal();
+	}
+	//override equals and hashCode
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		} else if (!(obj instanceof Card)) {
+			return false;
+		} else {
+			Card card2 = (Card) obj;
+			return rank.equals(card2.getRank()) && suit.equals(card2.getSuit());
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Integer.valueOf(String.valueOf(rank.ordinal())
+				+ String.valueOf(suit.ordinal()));
+	}
+
+
+	public String printCard(){return suit.toString() + " " + rank.toString();}
 }
