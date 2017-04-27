@@ -17,7 +17,9 @@ public class PokerGame {
     private int pot;
     private int buyin;
 
-    public List<Card> getTableCards(){return tableCards;}
+    public List<Card> getTableCards() {
+        return tableCards;
+    }
 
     private void getRankings() {
         for (PlayerInterface p : players) {
@@ -25,7 +27,7 @@ public class PokerGame {
         }
     }
 
-    public void newGame(DeckInterface deck, int buyin, PlayerInterface player1, PlayerInterface... _players){
+    public void newGame(DeckInterface deck, int buyin, PlayerInterface player1, PlayerInterface... _players) {
         this.deck = deck;
         this.buyin = buyin;
         int total = 0;
@@ -50,14 +52,14 @@ public class PokerGame {
                 total = total + buyin;
             }
             conn.close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Got an exception! ");
             e.printStackTrace();
         }
         setPot(total);
     }
-    public void addPlayer(PlayerInterface p){
+
+    public void addPlayer(PlayerInterface p) {
         //get gold from player to increase the pot
         try {
             //connect to db
@@ -77,15 +79,15 @@ public class PokerGame {
             //close connection to db
             conn.close();
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Got an exception! ");
             e.printStackTrace();
         }
 
 
     }
-    public void removePlayer(PlayerInterface player){
+
+    public void removePlayer(PlayerInterface player) {
         players.remove(player);
         player.exitGame();
     }
@@ -97,6 +99,7 @@ public class PokerGame {
         }
         return sum;
     }
+
     public Card getSecondHighCard(PlayerInterface player, Card card) {
         if (player.getHand()[0].equals(card)) {
             return player.getHand()[1];
@@ -143,11 +146,10 @@ public class PokerGame {
     }
 
     private PlayerInterface compareHighCard(PlayerInterface player1, Card player1HighCard,
-                                    PlayerInterface player2, Card player2HighCard) {
+                                            PlayerInterface player2, Card player2HighCard) {
         if (player1HighCard.rankInt() > player2HighCard.rankInt()) {
             return player1;
-        }
-        else if (player1HighCard.rankInt() < player2HighCard.rankInt()) {
+        } else if (player1HighCard.rankInt() < player2HighCard.rankInt()) {
             return player2;
         }
         return null;
@@ -161,33 +163,36 @@ public class PokerGame {
         this.pot = pot;
     }
 
-    public void dealHand(){
-        for(PlayerInterface player : players){
+    public void dealHand() {
+        for (PlayerInterface player : players) {
             player.getHand()[0] = deck.pop();
             player.getHand()[1] = deck.pop();
         }
         getRankings();
     }
-    public void flop(){
+
+    public void flop() {
         deck.pop();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             tableCards.add(deck.pop());
         }
         getRankings();
     }
+
     //changed to turnRiver, just calling it twice now.
     public void turnRiver() {
         deck.pop();
         tableCards.add(deck.pop());
         getRankings();
     }
+
     //does the same thing as turn,
 /*    public void river(){
         deck.pop();
         tableCards.add(deck.pop());
         getRankings();
     }*/
-    public List<PlayerInterface> winner(){
+    public List<PlayerInterface> winner() {
         getRankings();
         List<PlayerInterface> winnerList = new ArrayList<PlayerInterface>();
         PlayerInterface winner = players.get(0);
@@ -237,16 +242,15 @@ public class PokerGame {
             //close connection to db
             conn.close();
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Got an exception! ");
             e.printStackTrace();
         }
 
         return winnerList;
     }
-}
-    public void winnerGold(List<PlayerInterface> winnerList, int g){
+
+    public void winnerGold(List<PlayerInterface> winnerList, int g) {
         try {
             //connection to database
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/java", "root", "root");
@@ -263,9 +267,9 @@ public class PokerGame {
                 //increase pot
             }
             conn.close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Got an exception! ");
             e.printStackTrace();
         }
     }
+}
