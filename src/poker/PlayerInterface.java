@@ -8,8 +8,10 @@ import java.util.List;
 public interface PlayerInterface {
     public Card[] getHand();
     public void setHand(Card[] hand);
-    public List<Card> getRankingList;
-    public void setRankingList;
+    public List<Card> getRankingList();
+    public void setRankingList(List<Card> rankingList);
+    public HandRank getHandRank();
+    public void setHandRank(HandRank handRank);
     public Card getHighCard();
     public void setHighCard(Card highCard);
     public int getUserId();

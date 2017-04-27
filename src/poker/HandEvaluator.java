@@ -6,290 +6,291 @@ package poker;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Stream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static poker.Rank.*;
+import static poker.HandRank.*;
+
 
 public class HandEvaluator {
     private HandEvaluator(){
 
     }
     public static Integer getRankingToInt(PlayerInterface p) {
-        return p.getRankingEnum().ordinal();
+        return p.getHandRank().ordinal();
     }
-    private Card[] hand = new Card[2];
+    public static void checkRanking(PlayerInterface player, List<Card> tableCards) {
 
-    public Comparator<Card> byRank = (Card left, Card right) -> {
-        if (left.getRank().getValue() < right.getRank().getValue()) {
-            return -1;
-        } else {
-            return 1;
-        }
-    };
+        //get the HIGH_CARD
+        Card highCard = getHighCard(player, tableCards);
+        player.setHighCard(highCard);
 
-    //move these to Player????
-    public Hand() {
-    }
+        //check for ROYAL_FLUSH
+        List<Card> rankingList = getRoyalFlush(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, ROYAL_FLUSH, rankingList);
+            return;
+        }
+        //check for STRAIGHT_FLUSH
+        rankingList = getStraightFlush(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, STRAIGHT_FLUSH, rankingList);
+            return;
+        }
+        //check for FOUR_OF_A_KIND
+        rankingList = getFourOfAKind(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, FOUR_OF_A_KIND, rankingList);
+            return;
+        }
+        //check for FULL_HOUSE
+        rankingList = getFullHouse(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, FULL_HOUSE, rankingList);
+            return;
+        }
+        //check for FLUSH
+        rankingList = getFlush(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, FLUSH, rankingList);
+            return;
+        }
+        //check for STRAIGHT
+        rankingList = getStraight(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, STRAIGHT, rankingList);
+            return;
+        }
+        //check for THREE_OF_A_KIND
+        rankingList = getThreeOfAKind(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, THREE_OF_A_KIND, rankingList);
+            return;
+        }
+        //check for TWO_PAIR
+        rankingList = getTwoPair(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, TWO_PAIR, rankingList);
+            return;
+        }
+        //check for ONE_PAIR
+        rankingList = getOnePair(player, tableCards);
+        if (rankingList != null) {
+            setRankingEnumAndList(player, ONE_PAIR, rankingList);
+            return;
+        }
+        //finish with HIGH_CARD
+        player.setHandRank(HIGH_CARD);
+        List<Card> highCardRankingList = new ArrayList<Card>();
+        highCardRankingList.add(highCard);
+        player.setRankingList(highCardRankingList);
+        return;
 
-    public Hand(Card[] hand) {
-        this.hand = hand;
-    }
-
-
-    public Card[] getHand() {
-        return hand;
-    }
-
-    public void setHand(Card[] hand) {
-        this.hand = hand;
-    }
-
-    public void printCardsInHand() {
-        for (Card i : hand) {
-            System.out.println(i);
-        }
-    }
-    //not my favorite method of determining rank, may rework soon
-    public HandRank sortRanks(Card[] flop) {
-        if (RoyalFlush(flop)) {
-            return HandRank.ROYAL_FLUSH;
-        }
-        else if (StraightFlush(flop)) {
-            return HandRank.STRAIGHT_FLUSH;
-        }
-        else if (FourOfAKind(flop)) {
-            return HandRank.FOUR_OF_A_KIND;
-        }
-        else if (FullHouse(flop)) {
-            return HandRank.FULL_HOUSE;
-        }
-        else if (Flush(flop)) {
-            return HandRank.FLUSH;
-        }
-        else if (Straight(flop)) {
-            return HandRank.STRAIGHT;
-        }
-        else if (ThreeOfAKind(flop)) {
-            return HandRank.THREE_OF_A_KIND;
-        }
-        else if (TwoPair(flop)) {
-            return HandRank.TWO_PAIR;
-        }
-        else if (Pair(flop)) {
-            return HandRank.ONE_PAIR;
-        }
-        else {
-            return HandRank.HIGH_CARD;
-        }
-
-    }
-
-    public boolean RoyalFlush(Card[] flop) {
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-
-        if (Straight(allCards) && Flush(allCards)) { //must be a straight and flop to have royal flush
-            //check for the proper cards
-            boolean ace = false;
-            boolean king = false;
-            boolean queen = false;
-            boolean jack = false;
-            boolean ten = false;
-
-            for (Card c : allCards) {
-                switch (c.getRank()) {
-                    case "Ace":
-                        ace = true;
-                        break;
-                    case "King":
-                        king = true;
-                        break;
-                    case "Queen":
-                        queen = true;
-                        break;
-                    case "Jack":
-                        jack = true;
-                        break;
-                    case "10":
-                        ten = true;
-                        break;
-
-                }
-            }
-            return (ace && king && queen && jack && ten);
-        }
-        else {
-            return false;
-        }
     }
 
-    public boolean Straight(Card[] flop) {
-        int consecutiveCards = 0;
-        int pos = 0;
+    public static List<Card> getRoyalFlush(PlayerInterface player, List<Card> tableCards) {
+        if (!isSameSuit(player, tableCards)) {
+            return null;
+        }
 
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-        Arrays.sort(allCards, byRank);
+        List<Rank> rankEnumList = toRankEnumList(player, tableCards);
 
+        if (rankEnumList.contains(C_10) && rankEnumList.contains(JACK) && rankEnumList.contains(QUEEN)
+                && rankEnumList.contains(KING) && rankEnumList.contains(ACE)) {
+            return getMergedCardList(player, tableCards);
+        }
+        return null;
+    }
 
-        while (pos < allCards.length - 1 && !Straight) {
-            if (allCards[pos + 1].getRank().getValue() - allCards[pos].getRank().getValue() == 1) {
-                consecutiveCards++;
-                if (consecutiveCards == 4) {
-                    return true;
-                } else {
-                    pos++;
-                }
-            } else {
-                consecutiveCards = 0;
-                pos++;
+    public static List<Card> getStraightFlush(PlayerInterface player, List<Card> tableCards) {
+        return getSequence(player, tableCards, 5, true);
+    }
+
+    public static List<Card> getFourOfAKind(PlayerInterface player, List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        return checkPair(mergedList, 4);
+    }
+
+    public static List<Card> getFullHouse(PlayerInterface player, List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        List<Card> threeList = checkPair(mergedList, 3);
+        if (threeList != null) {
+            mergedList.removeAll(threeList);
+            List<Card> twoList = checkPair(mergedList, 2);
+            if (twoList != null) {
+                threeList.addAll(twoList);
+                return threeList;
             }
         }
-        return false;
+        return null;
     }
 
-    public boolean Flush(Card[] flop) {
-        int clubs = 0;
-        int spades = 0;
-        int hearts = 0;
-        int diamonds = 0;
+    public static List<Card> getFlush(PlayerInterface player, List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        List<Card> flushList = new ArrayList<Card>();
 
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-
-        //preferably rework into if statement logic
-        for (Card c : allCards) {
-            switch (c.getSuit()) {
-                case "HEART":
-                    hearts++;
-                    break;
-                case "SPADES":
-                    spades++;
-                    break;
-                case "CLUBS":
-                    clubs++;
-                    break;
-                case "DIAMONDS":
-                    diamonds++;
-                    break;
-            }
-        }
-        //return at least 5 match suits
-        return (clubs >= 5 || spades >= 5 || hearts >= 5 || diamonds >= 5);
-    }
-
-    public boolean FourOfAKind(Card[] flop) {
-        int repeats = 1; //single instance of card
-        int i = 0;
-        int k = 1;
-
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-
-
-        while (i < allCards.length) {
-            repeats = 1;
-            while (k < allCards.length) {
-                if (allCards[i].getRank().getValue() == allCards[k].getRank().getValue()) {
-                    repeats++;
-                    if (repeats == 4) {
-                        return true;
+        for (Card card1 : mergedList) {
+            for (Card card2 : mergedList) {
+                if (card1.getSuit().equals(card2.getSuit())) {
+                    if (!flushList.contains(card1)) {
+                        flushList.add(card1);
+                    }
+                    if (!flushList.contains(card2)) {
+                        flushList.add(card2);
                     }
                 }
-                k++;
             }
-            i++;
+            if (flushList.size() == 5) {
+                return flushList;
+            }
+            flushList.clear();
         }
-        return false;
+        return null;
     }
 
-    private boolean ThreeOfAKind(Card[] flop) {
-        int repeats = 1; //single instance of card
-        int i = 0;
-        int k = 1;
-
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-
-        while (i < allCards.length) {
-            repeats = 1;
-            while (k < allCards.length) {
-                if (allCards[i].getRank().getValue() == allCards[k].getRank().getValue()) {
-                    repeats++;
-                    if (repeats == 3) {
-                        return true;
-                    }
-                }
-                k++;
-            }
-            i++;
-        }
-        return false;
+    public static List<Card> getStraight(PlayerInterface player, List<Card> tableCards) {
+        return getSequence(player, tableCards, 5, false);
     }
 
-    private boolean TwoPair(Card[] flop) {
-        int repeats = 1;
-        int pairs = 0;
-        int i = 0;
-        int k = i + 1;
+    public static List<Card> getThreeOfAKind(PlayerInterface player,
+                                             List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        return checkPair(mergedList, 3);
+    }
 
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
+    public static List<Card> getTwoPair(PlayerInterface player, List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        List<Card> twoPair1 = checkPair(mergedList, 2);
+        if (twoPair1 != null) {
+            mergedList.removeAll(twoPair1);
+            List<Card> twoPair2 = checkPair(mergedList, 2);
+            if (twoPair2 != null) {
+                twoPair1.addAll(twoPair2);
+                return twoPair1;
+            }
+        }
+        return null;
+    }
 
-        while (i < allCards.length) {
-            repeats = 1;
-            while (k < allCards.length) {
-                if (allCards[i].getRank().getValue() == allCards[k].getRank().getValue()) {
-                    repeats++;
-                    if (repeats == 2) {
-                        pairs = 1;
-                        repeats = 1;
-                        if (pairs == 2) {
-                            return true;
+    public static List<Card> getOnePair(PlayerInterface player, List<Card> tableCards) {
+        List<Card> mergedList = getMergedCardList(player, tableCards);
+        return checkPair(mergedList, 2);
+    }
+
+    public static Card getHighCard(PlayerInterface player, List<Card> tableCards) {
+        List<Card> allCards = new ArrayList<Card>();
+        allCards.addAll(tableCards);
+        allCards.add(player.getHand()[0]);
+        allCards.add(player.getHand()[1]);
+
+        Card highCard = allCards.get(0);
+        for (Card card : allCards) {
+            if (card.rankInt() > highCard.rankInt()) {
+                highCard = card;
+            }
+        }
+        return highCard;
+    }
+
+    private static List<Card> getSequence(PlayerInterface player, List<Card> tableCards,
+                                          Integer sequenceSize, Boolean compareSuit) {
+        List<Card> orderedList = getOrderedCardList(player, tableCards);
+        List<Card> sequenceList = new ArrayList<Card>();
+
+        Card cardPrevious = null;
+        for (Card card : orderedList) {
+            if (cardPrevious != null) {
+                if ((card.rankInt() - cardPrevious.rankInt()) == 1) {
+                    if (!compareSuit
+                            || cardPrevious.getSuit().equals(card.getSuit())) {
+                        if (sequenceList.size() == 0) {
+                            sequenceList.add(cardPrevious);
                         }
+                        sequenceList.add(card);
                     }
-                    k++;
+                } else {
+                    if (sequenceList.size() == sequenceSize) {
+                        return sequenceList;
+                    }
+                    sequenceList.clear();
                 }
-                i++;
             }
+            cardPrevious = card;
+        }
+
+        return (sequenceList.size() == sequenceSize) ? sequenceList : null;
+    }
+
+    private static List<Card> getMergedCardList(PlayerInterface player,
+                                                List<Card> tableCards) {
+        List<Card> merged = new ArrayList<Card>();
+        merged.addAll(tableCards);
+        merged.add(player.getHand()[0]);
+        merged.add(player.getHand()[1]);
+        return merged;
+    }
+
+    private static List<Card> getOrderedCardList(PlayerInterface player, List<Card> tableCards) {
+        List<Card> ordered = getMergedCardList(player, tableCards);
+        Collections.sort(ordered, new Comparator<Card>() {
+            public int compare(Card c1, Card c2) {
+                return c1.rankInt() < c2.rankInt() ? -1 : 1;
+            }
+        });
+        return ordered;
+    }
+
+    private static List<Card> checkPair(List<Card> mergedList, Integer pairSize) {
+        List<Card> checkedPair = new ArrayList<Card>();
+        for (Card card1 : mergedList) {
+            checkedPair.add(card1);
+            for (Card card2 : mergedList) {
+                if (!card1.equals(card2)
+                        && card1.getRank().equals(card2.getRank())) {
+                    checkedPair.add(card2);
+                }
+            }
+            if (checkedPair.size() == pairSize) {
+                return checkedPair;
+            }
+            checkedPair.clear();
+        }
+        return null;
+    }
+
+    private static Boolean isSameSuit(PlayerInterface player, List<Card> tableCards) {
+        Suit suit = player.getHand()[0].getSuit();
+
+        if (!suit.equals(player.getHand()[1].getSuit())) {
             return false;
         }
-    }
 
-    private boolean Pair(Card[] flop) {
-        int repeats = 1; //single instance of card
-        int i = 0;
-        int k = 1;
-
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-
-        while (i < allCards.length) {
-            repeats = 1;
-            while (k < allCards.length) {
-                if (allCards[i].getRank().getValue() == allCards[k].getRank().getValue()) {
-                    repeats++;
-                    if (repeats == 2) {
-                        return true;
-                    }
-                }
-                k++;
+        for (Card card : tableCards) {
+            if (!card.getSuit().equals(suit)) {
+                return false;
             }
-            i++;
         }
-        return false;
+
+        return true;
     }
 
+    private static List<Rank> toRankEnumList(PlayerInterface player, List<Card> tableCards) {
+        List<Rank> rankEnumList = new ArrayList<Rank>();
 
-    private boolean FullHouse(Card[] flop) {
-        Card[] allCards = Stream.concat(Arrays.stream(flop), Arrays.stream(hand)).toArray(Card[]::new);
-        Arrays.sort(allCards, byRank);
-
-        if(ThreeOfAKind(allCards) && Pair(allCards)) {
-            return true;
+        for (Card card : tableCards) {
+            rankEnumList.add(card.getRank());
         }
-        return false;
 
+        rankEnumList.add(player.getHand()[0].getRank());
+        rankEnumList.add(player.getHand()[1].getRank());
+
+        return rankEnumList;
     }
 
-
-    private boolean StraightFlush(Card[] flop) {
-        if (Flush(flop) && Straight(flop)) {
-            return true;
-        }
-        return false;
+    private static void setRankingEnumAndList(PlayerInterface player, HandRank handRank, List<Card> rankingList) {
+        player.setHandRank(handRank);
+        player.setRankingList(rankingList);
     }
-
-    //need high card implementations still.
 }
-
