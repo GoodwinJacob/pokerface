@@ -10,12 +10,12 @@ import java.util.Random;
 
 public class Deck implements DeckInterface{
         //ArrayList of 52 cards
-        ArrayList<Card> arrayOfCards = new ArrayList<Card>(52);
+        ArrayList<Card> arrayOfCards = new ArrayList<Card>;
 
         private Random random = new Random();
 
         /*
-         * @breif Initialize the deck and then shuffle it.
+         * @brief Initialize the deck and then shuffle it.
          */
         Deck(){
             this(new Random());
@@ -32,9 +32,9 @@ public class Deck implements DeckInterface{
          * Cards are not shuffled.
          */
         public void initializeDeck(){
-            for(int i = 0; i < suits.length; i++){
-                for(int j = 0; j < ranks.length; j++){
-                    arrayOfCards.add(new Card(suits[i], ranks[j]));
+            for(Suit suit : Suit.values()){
+                for(Rank rank : Rank.values()){
+                    arrayOfCards.add(new Card(suit, rank));
                 }
             }
         }
